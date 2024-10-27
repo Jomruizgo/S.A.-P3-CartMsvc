@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Item {
-    private Long id;
+    private String id;
     private String ticketId;
-    private Long cartId;
+    private String cartId;
     private String name;
     private int availableQuantity;
     private int selectedQuantity;
@@ -16,7 +16,7 @@ public class Item {
 
     public Item(){}
 
-    public Item(Long id, String ticketId, Long cartId, String name){
+    public Item(String id, String ticketId, String cartId, String name){
         this.id = id;
         this.ticketId = ticketId;
         this.cartId = cartId;
@@ -24,11 +24,11 @@ public class Item {
     }
 
     // Getters y Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -40,11 +40,11 @@ public class Item {
         this.ticketId = ticketId;
     }
 
-    public Long getCartId() {
+    public String getCartId() {
         return cartId;
     }
 
-    public void setCartId(Long cartId) {
+    public void setCartId(String cartId) {
         this.cartId = cartId; // Corregido
     }
 

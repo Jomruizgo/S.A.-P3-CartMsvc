@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 public class CartResponseDTO {
-    private Long id;
+    private String id;
     private Long userId;
     private List<ItemResponseDTO> items;
 }

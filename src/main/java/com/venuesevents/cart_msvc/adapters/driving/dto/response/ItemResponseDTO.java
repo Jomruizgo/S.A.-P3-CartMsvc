@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ItemResponseDTO {
-    private Long id;
+    private String id;
     private String ticketId;
     private String name;
     private int quantity;

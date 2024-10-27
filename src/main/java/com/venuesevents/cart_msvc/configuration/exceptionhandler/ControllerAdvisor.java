@@ -1,7 +1,7 @@
 package com.venuesevents.cart_msvc.configuration.exceptionhandler;
 
 
-import com.venuesevents.cart_msvc.domain.exception.InvalidTokenException;
+import com.venuesevents.cart_msvc.domain.exception.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -16,11 +16,11 @@ import java.util.Map;
 @ControllerAdvice
 public class ControllerAdvisor {
 
-    @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidTokenException(InvalidTokenException exception){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionResponse(
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleObjectNotFoundException(ObjectNotFoundException exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponse(
                 String.format(exception.getMessage()),
-                HttpStatus.UNAUTHORIZED.toString(), LocalDateTime.now()
+                HttpStatus.NOT_FOUND.toString(), LocalDateTime.now()
         ));
     }
 

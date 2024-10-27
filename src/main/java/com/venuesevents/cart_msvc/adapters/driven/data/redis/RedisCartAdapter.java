@@ -2,6 +2,7 @@ package com.venuesevents.cart_msvc.adapters.driven.data.redis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.venuesevents.cart_msvc.domain.model.Cart;
+import com.venuesevents.cart_msvc.domain.model.Item;
 import com.venuesevents.cart_msvc.domain.spi.ICartPersistencePort;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -33,13 +34,14 @@ public class RedisCartAdapter implements ICartPersistencePort {
             });
         }
 
-        // Guardar el carrito en Redis
+        // Asocia userId con cartId para consulta rápida
+        redisTemplate.opsForValue().set("user_cart:" + cart.getUserId(), cart.getId());
         redisTemplate.opsForValue().set("cart:" + cart.getId(), cart);
         return cart;
     }
 
     @Override
-    public Cart getCart(Long cartId) {
+    public Cart getCart(String cartId) {
         Object redisCart = redisTemplate.opsForValue().get("cart:" + cartId);
         if (redisCart != null) {
             return objectMapper.convertValue(redisCart, Cart.class);
@@ -48,11 +50,40 @@ public class RedisCartAdapter implements ICartPersistencePort {
     }
 
     @Override
-    public void deleteCart(Long cartId) {
-        redisTemplate.delete("cart:" + cartId);
+    public Cart getCartByUserId(Long userId) {
+        String cartId = (String) redisTemplate.opsForValue().get("user_cart:" + userId);
+        return cartId != null ? getCart(cartId) : null;
     }
 
-    private Long generateId() {
-        return UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE; // Genera un número positivo
+    @Override
+    public void deleteCart(String cartId) {
+        Cart cart = getCart(cartId);
+        if (cart != null) {
+            redisTemplate.delete("cart:" + cartId);
+            redisTemplate.delete("user_cart:" + cart.getUserId());
+        }
+    }
+
+    @Override
+    public Cart addItemToCart(Long userId, Item item) {
+        Cart cart = getCartByUserId(userId);
+        if (cart == null) throw new IllegalArgumentException("Cart not found for user");
+
+        item.setId(generateId());
+        cart.getItems().add(item);
+        return saveCart(cart);
+    }
+
+    @Override
+    public Cart removeItemFromCart(Long userId, String itemId) {
+        Cart cart = getCartByUserId(userId);
+        if (cart == null) throw new IllegalArgumentException("Cart not found for user");
+
+        cart.getItems().removeIf(item -> item.getId().equals(itemId));
+        return saveCart(cart);
+    }
+
+    private String generateId() {
+        return UUID.randomUUID().toString(); // Genera un número positivo
     }
 }

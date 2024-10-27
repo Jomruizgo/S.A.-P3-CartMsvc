@@ -3,24 +3,24 @@ package com.venuesevents.cart_msvc.domain.model;
 import java.util.List;
 
 public class Cart {
-    private Long id;
+    private String id;
     private Long userId;
     private List<Item> items; // Lista de Items en el carrito
 
     public Cart(){}
 
-    public Cart(Long id, Long userId, List<Item> items) {
+    public Cart(String id, Long userId, List<Item> items) {
         this.id = id;
         this.userId = userId;
         this.items = items;
     }
 
     // Getters y Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

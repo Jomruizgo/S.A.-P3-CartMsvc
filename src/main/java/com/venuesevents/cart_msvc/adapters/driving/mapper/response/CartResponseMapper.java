@@ -13,7 +13,7 @@ public class CartResponseMapper {
         cartResponseDTO.setUserId(cart.getUserId());
         cartResponseDTO.setItems(cart.getItems().stream()
                 .map(ItemResponseMapper::toResponse)
-                .collect(Collectors.toList()));
+                .toList());
         return cartResponseDTO;
     }
 }
